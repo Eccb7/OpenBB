@@ -8,16 +8,17 @@ from typing import Any, Optional, Literal
 
 from dateutil.relativedelta import relativedelta
 from openbb_core.provider.abstract.fetcher import Fetcher
-from openbb_core.provider.standard_models.cpi import (
-    ConsumerPriceIndexData,
-    ConsumerPriceIndexQueryParams,
-)
+from openbb_core.provider.abstract.query_params import QueryParams
+from openbb_core.provider.abstract.data import Data
 from openbb_core.provider.utils.errors import EmptyDataError
 from pydantic import Field
 
 
-class KenyaCBKInflationQueryParams(ConsumerPriceIndexQueryParams):
+class KenyaCBKInflationQueryParams(QueryParams):
     """CBK Inflation Data Query Parameters."""
+
+    start_date: Optional[date] = Field(default=None, description="Start date")
+    end_date: Optional[date] = Field(default=None, description="End date")
 
     cpi_type: Optional[Literal["headline", "food", "core", "all"]] = Field(
         default="headline",
@@ -25,8 +26,10 @@ class KenyaCBKInflationQueryParams(ConsumerPriceIndexQueryParams):
     )
 
 
-class KenyaCBKInflationData(ConsumerPriceIndexData):
+class KenyaCBKInflationData(Data):
     """CBK Inflation Data."""
+
+    date: date = Field(description="Date of the observation")
 
     headline_cpi: Optional[float] = Field(
         default=None,
